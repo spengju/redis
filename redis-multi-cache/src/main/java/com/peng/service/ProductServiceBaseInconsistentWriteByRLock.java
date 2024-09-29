@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
  * 4.突发性热点缓存重建:
  * redisson分布式锁实现双重检测,只针对特定的商品加锁
  * 5.添加修改锁，解决缓存和数据库双写不一致
- *   读写锁，缩小锁的粒度
+ * 读写锁，缩小锁的粒度
  */
 @Service
 public class ProductServiceBaseInconsistentWriteByRLock implements ProductService {
@@ -46,15 +46,16 @@ public class ProductServiceBaseInconsistentWriteByRLock implements ProductServic
     @Override
     public Product create(Product product) {
         Product productResult = null;
-        RLock updateProductLock = redisson.getLock(LOCK_PRODUCT_UPDATE_PREFIX + product.getId());
-        updateProductLock.lock();
+        RReadWriteLock readWriteLock = redisson.getReadWriteLock(LOCK_PRODUCT_UPDATE_PREFIX + product.getId());
+        RLock writeLock = readWriteLock.writeLock();
+        writeLock.lock();
         try {
             productResult = productDao.create(product);
             if (product != null) {
                 RedisUtil.set(RedisKeyPrefixConst.PRODUCT_CACHE + productResult.getId(), JSON.toJSONString(productResult), genProductCacheTimeout(), TimeUnit.SECONDS);
             }
         } finally {
-            updateProductLock.unlock();
+            writeLock.unlock();
         }
         return productResult;
     }
@@ -63,15 +64,16 @@ public class ProductServiceBaseInconsistentWriteByRLock implements ProductServic
     @Transactional
     public Product update(Product product) {
         Product productResult = null;
-        RLock updateProductLock = redisson.getLock(LOCK_PRODUCT_UPDATE_PREFIX + product.getId());
-        updateProductLock.lock();
+        RReadWriteLock readWriteLock = redisson.getReadWriteLock(LOCK_PRODUCT_UPDATE_PREFIX + product.getId());
+        RLock writeLock = readWriteLock.writeLock();
+        writeLock.lock();
         try {
             productResult = productDao.update(product);
             if (product != null) {
                 RedisUtil.set(RedisKeyPrefixConst.PRODUCT_CACHE + productResult.getId(), JSON.toJSONString(productResult), genProductCacheTimeout(), TimeUnit.SECONDS);
             }
         } finally {
-            updateProductLock.unlock();
+            writeLock.unlock();
         }
         return productResult;
     }
