@@ -28,11 +28,7 @@ public class ProductController {
 
     @RequestMapping("/get/{productId}")
     public Product getProduct(@PathVariable Long productId) {
-        try {
-            return productService.get(productId);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        return productService.get(productId);
     }
 
 }
