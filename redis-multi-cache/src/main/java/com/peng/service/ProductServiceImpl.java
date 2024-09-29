@@ -2,7 +2,7 @@ package com.peng.service;
 
 import com.alibaba.fastjson.JSON;
 import com.peng.common.RedisKeyPrefixConst;
-import com.peng.common.RedisUtil;
+import com.peng.common.util.RedisUtil;
 import com.peng.dao.ProductDao;
 import com.peng.model.Product;
 import org.redisson.Redisson;
