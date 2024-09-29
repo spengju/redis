@@ -24,6 +24,13 @@ public class ApplicationContextHolder {
         return applicationContext.getBean(clazz);
     }
 
+    public static <T> T getBean(String beanName) {
+        if (!checkApplication()) {
+            return null;
+        }
+        return (T) applicationContext.getBean(beanName);
+    }
+
     private static Boolean checkApplication() {
         if (Objects.isNull(applicationContext)) {
             return false;

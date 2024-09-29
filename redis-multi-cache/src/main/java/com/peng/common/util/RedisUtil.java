@@ -11,7 +11,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class RedisUtil {
 
-    private static final RedisTemplate redisTemplate = ApplicationContextHolder.getBean(RedisTemplate.class);
+//    private static final RedisTemplate redisTemplate = ApplicationContextHolder.getBean(RedisTemplate.class);
+    private static final RedisTemplate redisTemplate = ApplicationContextHolder.getBean("redisTemplate");
 
     public static void set(String key, Object value) {
         redisTemplate.opsForValue().set(key, value);

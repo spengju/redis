@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
  * @Slogan: Day day no bug.
  * @Date: 2024/9/30 01:03
  */
-@RestController("/api/product")
+@RestController
+@RequestMapping("/api/product")
 public class ProductController {
 
     @Autowired
