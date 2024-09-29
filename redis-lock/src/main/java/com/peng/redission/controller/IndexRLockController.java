@@ -34,6 +34,7 @@ public class IndexRLockController {
         RLock redissonLock = redisson.getLock(lockKey);
         //加分布式锁
         redissonLock.lock();  //  .setIfAbsent(lockKey, clientId, 30, TimeUnit.SECONDS);
+//        redissonLock.tryLock()
         try {
             int stock = Integer.parseInt(stringRedisTemplate.opsForValue().get("stock")); // jedis.get("stock")
             if (stock > 0) {
@@ -47,7 +48,6 @@ public class IndexRLockController {
             //解锁
             redissonLock.unlock();
         }
-
 
         return "end";
     }
