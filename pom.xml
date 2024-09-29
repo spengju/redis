@@ -11,6 +11,7 @@
     <modules>
         <module>demo</module>
         <module>redis-lock</module>
+        <module>redis-multi-cache</module>
     </modules>
 
     <properties>
@@ -25,6 +26,7 @@
 <!--        <redis.redisson.version>3.34.0</redis.redisson.version>-->
         <redis.redisson.version>3.6.5</redis.redisson.version>
         <redis.jedis.version>2.9.0</redis.jedis.version>
+        <fastjson.version>1.2.83</fastjson.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -46,6 +48,11 @@
                 <artifactId>redis-lock</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <dependency>
+                <groupId>com.peng</groupId>
+                <artifactId>redis-multi-cache</artifactId>
+                <version>${revision}</version>
+            </dependency>
             <!-- https://mvnrepository.com/artifact/org.redisson/redisson -->
             <dependency>
                 <groupId>org.redisson</groupId>
@@ -56,6 +63,11 @@
                 <groupId>redis.clients</groupId>
                 <artifactId>jedis</artifactId>
                 <version>${redis.jedis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
             </dependency>
 
         </dependencies>
