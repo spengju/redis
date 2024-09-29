@@ -4,7 +4,6 @@ import org.redisson.Redisson;
 import org.redisson.RedissonRedLock;
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,8 +23,6 @@ public class IndexController {
     private Redisson redisson;
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
-    @Autowired
-    private RedisTemplate redisTemplate;
 
     @RequestMapping("/deduct_stock")
     public String deductStock() {
@@ -37,10 +34,7 @@ public class IndexController {
         if (!result) {
             return "error_code";
         }
-/*        //获取锁对象
-        RLock redissonLock = redisson.getLock(lockKey);
-        //加分布式锁
-        redissonLock.lock();  //  .setIfAbsent(lockKey, clientId, 30, TimeUnit.SECONDS);*/
+
         try {
             int stock = Integer.parseInt(stringRedisTemplate.opsForValue().get("stock")); // jedis.get("stock")
             if (stock > 0) {
@@ -60,8 +54,7 @@ public class IndexController {
 
                 stringRedisTemplate.delete(lockKey);
             }
-            //解锁
-//            redissonLock.unlock();
+
         }
 
 

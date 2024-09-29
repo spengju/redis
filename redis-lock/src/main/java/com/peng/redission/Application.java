@@ -22,7 +22,7 @@ public class Application {
     public Redisson redisson() {
         // 此为单机模式
         Config config = new Config();
-        config.useSingleServer().setAddress("redis://111.229.94.137:6379").setDatabase(0);
+        config.useSingleServer().setAddress("redis://111.229.94.137:6379").setPassword("peng123").setDatabase(0);
         return (Redisson) Redisson.create(config);
     }
 

@@ -30,13 +30,6 @@ public class IndexRLockController {
     @RequestMapping("/deduct_stock")
     public String deductStock() {
         String lockKey = "lock:product_101";
-        //Boolean result = stringRedisTemplate.opsForValue().setIfAbsent(lockKey, "peng");
-        //stringRedisTemplate.expire(lockKey, 10, TimeUnit.SECONDS);
-        /*String clientId = UUID.randomUUID().toString();
-        Boolean result = stringRedisTemplate.opsForValue().setIfAbsent(lockKey, clientId, 30, TimeUnit.SECONDS); //jedis.setnx(k,v)
-        if (!result) {
-            return "error_code";
-        }*/
         //获取锁对象
         RLock redissonLock = redisson.getLock(lockKey);
         //加分布式锁
@@ -51,9 +44,6 @@ public class IndexRLockController {
                 System.out.println("扣减失败，库存不足");
             }
         } finally {
-            /*if (clientId.equals(stringRedisTemplate.opsForValue().get(lockKey))) {
-                stringRedisTemplate.delete(lockKey);
-            }*/
             //解锁
             redissonLock.unlock();
         }
