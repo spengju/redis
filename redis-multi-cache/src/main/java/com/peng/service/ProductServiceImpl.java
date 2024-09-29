@@ -30,9 +30,6 @@ public class ProductServiceImpl implements ProductService{
     private ProductDao productDao;
 
     @Autowired
-    private RedisUtil redisUtil;
-
-    @Autowired
     private Redisson redisson;
 
     public static final Integer PRODUCT_CACHE_TIMEOUT = 60 * 60 * 24;
@@ -44,7 +41,7 @@ public class ProductServiceImpl implements ProductService{
     @Transactional
     public Product create(Product product) {
         Product productResult = productDao.create(product);
-        redisUtil.set(RedisKeyPrefixConst.PRODUCT_CACHE + productResult.getId(), JSON.toJSONString(productResult),
+        RedisUtil.set(RedisKeyPrefixConst.PRODUCT_CACHE + productResult.getId(), JSON.toJSONString(productResult),
                 genProductCacheTimeout(), TimeUnit.SECONDS);
         return productResult;
     }
@@ -58,7 +55,7 @@ public class ProductServiceImpl implements ProductService{
         writeLock.lock();
         try {
             productResult = productDao.update(product);
-            redisUtil.set(RedisKeyPrefixConst.PRODUCT_CACHE + productResult.getId(), JSON.toJSONString(productResult),
+            RedisUtil.set(RedisKeyPrefixConst.PRODUCT_CACHE + productResult.getId(), JSON.toJSONString(productResult),
                     genProductCacheTimeout(), TimeUnit.SECONDS);
             productMap.put(RedisKeyPrefixConst.PRODUCT_CACHE + productResult.getId(), product);
         } finally {
@@ -92,11 +89,11 @@ public class ProductServiceImpl implements ProductService{
             try {
                 product = productDao.get(productId);
                 if (product != null) {
-                    redisUtil.set(productCacheKey, JSON.toJSONString(product),
+                    RedisUtil.set(productCacheKey, JSON.toJSONString(product),
                             genProductCacheTimeout(), TimeUnit.SECONDS);
                     productMap.put(productCacheKey, product);
                 } else {
-                    redisUtil.set(productCacheKey, EMPTY_CACHE, genEmptyCacheTimeout(), TimeUnit.SECONDS);
+                    RedisUtil.set(productCacheKey, EMPTY_CACHE, genEmptyCacheTimeout(), TimeUnit.SECONDS);
                 }
             } finally {
                 rLock.unlock();
@@ -122,14 +119,14 @@ public class ProductServiceImpl implements ProductService{
             return product;
         }
 
-        String productStr = redisUtil.get(productCacheKey);
+        String productStr = RedisUtil.get(productCacheKey);
         if (!StringUtils.isEmpty(productStr)) {
             if (EMPTY_CACHE.equals(productStr)) {
-                redisUtil.expire(productCacheKey, genEmptyCacheTimeout(), TimeUnit.SECONDS);
+                RedisUtil.expire(productCacheKey, genEmptyCacheTimeout(), TimeUnit.SECONDS);
                 return new Product();
             }
             product = JSON.parseObject(productStr, Product.class);
-            redisUtil.expire(productCacheKey, genProductCacheTimeout(), TimeUnit.SECONDS); //读延期
+            RedisUtil.expire(productCacheKey, genProductCacheTimeout(), TimeUnit.SECONDS); //读延期
         }
         return product;
     }
