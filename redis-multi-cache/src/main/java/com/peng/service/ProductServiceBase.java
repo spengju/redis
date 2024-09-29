@@ -49,7 +49,6 @@ public class ProductServiceBase implements ProductService {
         product = productDao.get(productId);
         if (product != null) {
             RedisUtil.set(productCacheKey, JSON.toJSONString(product));
-
         }
         return product;
     }
