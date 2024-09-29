@@ -1,7 +1,7 @@
 package com.peng.controller;
 
 import com.peng.model.Product;
-import com.peng.service.ProductService;
+import com.peng.service.ProductServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
 
     @Autowired
-    private ProductService productService;
+    private ProductServiceImpl productService;
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public Product create(@RequestBody Product productParam) {
