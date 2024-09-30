@@ -14,7 +14,7 @@ public class RedissonBloomFilter {
 
     public static void main(String[] args) {
         Config config = new Config();
-        config.useSingleServer().setAddress("redis://111.229.94.137:6379");
+        config.useSingleServer().setAddress("redis://111.229.94.137:6379").setPassword("peng123");
         //构造Redisson
         RedissonClient redisson = Redisson.create(config);
 
